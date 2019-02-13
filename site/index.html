@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Alta de Alumno</title>
+
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <script src="./web3.min.js"></script>
+    <script src="./utf8.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Registrar Alumno al curso</h1>
+
+        <h2 id="Alumno"></h2>
+
+        <label for="matricula" class="col-lg-2 control-label">Matricula</label>
+        <input id="matricula" type="text">
+
+        <label for="nombre" class="col-lg-2 control-label">Nombre Completo</label>
+        <input id="nombre" type="text">
+
+        <label for="campus" class="col-lg-2 control-label">Campus</label>
+        <input id="campus" type="text">
+
+        <label for="grupo" class="col-lg-2 control-label">Grupo</label>
+        <input id="grupo" type="text">
+
+        <label for="address" class="col-lg-2 control-label">Ethereum account</label>
+        <input id="address" type="text">
+
+        <button id="btnRegistrar">Registrar Alumno</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script>
+
+      // web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/79f3534c6c384e52855ac864d523db3b"));
+
+      // web3.eth.defaultAccount = web3.eth.accounts[0];
+      // var gestionpuntosContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"getCurso","outputs":[{"name":"thecurso","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getProfesor","outputs":[{"name":"theprofesor","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_matricula","type":"uint256"},{"name":"_nombreCompleto","type":"string"},{"name":"_campus","type":"string"},{"name":"_grupo","type":"string"}],"name":"registrarAlumno","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_matricula","type":"uint256"}],"name":"getPuntos","outputs":[{"name":"puntos","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_matricula","type":"uint256"},{"name":"_puntos","type":"int256"}],"name":"modificaPuntos","outputs":[{"name":"saldo","type":"int256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_curso","type":"uint256"}],"name":"modificaCurso","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_profesor","type":"address"},{"name":"_curso","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]);
+      // var gestionpuntos = gestionpuntosContract.at('0xda442f572f893d4e49408ed729a0063bad5c0a87');
+      //console.log(gestionpuntos);
+
+      window.addEventListener('load', async () => {
+            // Modern dapp browsers...
+            if (window.ethereum) {
+                window.web3 = new Web3(ethereum);
+                try {
+                    // Request account access if needed
+                    await ethereum.enable();
+                    // Acccounts now exposed
+                    web3.eth.sendTransaction({/* ... */});
+                } catch (error) {
+                    // User denied account access...
+                }
+            }
+            // Legacy dapp browsers...
+            else if (window.web3) {
+                window.web3 = new Web3(web3.currentProvider);
+                // Acccounts always exposed
+                web3.eth.sendTransaction({/* ... */});
+            }
+            // Non-dapp browsers...
+            else {
+                alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+
+
+        });
+
+      $("#btnRegistrar").click(function() {
+  
+          var _matricula = $("#matricula").val();
+          var _nombre = $("#nombre").val();
+          var _campus = $("#campus").val();
+          var _grupo = $("#grupo").val();
+          var _address = $("#address").val();
+          
+          //const URL = 'http://localhost:3000/api/cursos/getPuntos';
+          const URL = 'http://localhost:3000/api/cursos/registraAlumno';
+          const _data = {
+            matricula:_matricula,
+            nombre:_nombre,
+            campus:_campus,
+            grupo:_grupo,
+            address:_address};
+
+          $.ajax({
+              url: URL,
+              type: "POST",
+              data: JSON.stringify(_data),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+          }).then(function(result) {
+            $("#Alumno").html(
+              'Registro de alumno: ' + result[0].result +
+              ' Hash Transacción: ' + result[0].tx_hash);
+          });
+
+        // gestionpuntos.registrarAlumno(matricula,nombre,campus,grupo,
+        //   function(err, res){
+        //     if(err){
+        //       console.log(err);
+        //     }
+        //     else{
+        //       console.log(err);
+        //     }
+        //   }
+        // );
+
+        // var curso = gestionpuntos.getCurso({},function(err,result){
+        //   $("#Alumno").html('curso: ' + result);
+        // });
+
+      });
+
+    </script>
+
+</body>
+</html>

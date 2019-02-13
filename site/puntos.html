@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Alta de Alumno</title>
+
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <script src="./web3.min.js"></script>
+    <script src="./utf8.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Registrar Puntos de Alumno</h1>
+
+        <h2 id="Alumno"></h2>
+
+        <label for="address" class="col-lg-2 control-label">Address</label>
+        <input id="address" type="text">
+
+        <label for="puntos" class="col-lg-2 control-label">Puntos</label>
+        <input id="puntos" type="text" placeholder="use solo positivos modificar">
+
+        <label for="opcion" class="col-lg-2 control-label">Puntos</label>
+        <input id="opcion" type="text" placeholder="use 0 para restar los puntos">
+
+        <label for="mensaje" class="col-lg-2 control-label">Mensaje</label>
+        <input id="mensaje" type="text">
+
+        <button id="btnRegistrar">Registrar puntos</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script>
+
+        window.addEventListener('load', async () => {
+            // Modern dapp browsers...
+            if (window.ethereum) {
+                window.web3 = new Web3(ethereum);
+                try {
+                    // Request account access if needed
+                    await ethereum.enable();
+                    // Acccounts now exposed
+                    web3.eth.sendTransaction({/* ... */});
+                } catch (error) {
+                    // User denied account access...
+                }
+            }
+            // Legacy dapp browsers...
+            else if (window.web3) {
+                window.web3 = new Web3(web3.currentProvider);
+                // Acccounts always exposed
+                web3.eth.sendTransaction({/* ... */});
+            }
+            // Non-dapp browsers...
+            else {
+                alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+
+
+        });
+      
+        function String2Hex(tmp) {
+            var str = '';
+            for(var i = 0; i < tmp.length; i++) {
+                str += tmp[i].charCodeAt(0).toString(16);
+            }
+            return str;
+        }
+
+      $("#btnRegistrar").click(function() {
+  
+          var _address = $("#address").val();
+          var _puntos = $("#puntos").val();
+          var _opcion = $("#opcion").val();
+          var _mensajestr = $("#mensaje").val();
+          //var _mensaje = String2Hex(utf8.encode(_mensajestr));
+          //console.log(_mensaje);
+
+          const URL = 'http://localhost:3000/api/cursos/modificaPuntos';
+
+          const _data = {
+            address:_address,
+            puntos:_puntos,
+            opcion:_opcion,
+            mensaje:_mensajestr
+          };
+
+          $.ajax({
+              url: URL,
+              type: "POST",
+              data: JSON.stringify(_data),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+          }).then(function(result) {
+            $("#Alumno").html(
+              'Registro de puntos: ' + result[0].result +
+              ' Hash Transacción: ' + result[0].tx_hash);
+          });
+
+      });
+
+    </script>
+
+</body>
+</html>

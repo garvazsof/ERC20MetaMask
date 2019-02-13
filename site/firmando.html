@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Alta de Alumno</title>
+
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <script src="./web3.min.js"></script>
+
+</head>
+<body>
+    <div class="contenido">
+
+        <h1>Autorizacion de Alumno para interacción con contrato</h1>
+
+        <h2 id="Alumno"></h2>
+
+        <span class="col-lg-2">Cuenta</span>
+        <span id="cuenta"></span>
+        <br>
+        <span class="col-lg-2">Clic para autorizar</span>
+        <span id="puntos">.</span>
+
+        <button id="btnRegistrar" class="col-lg-2">Firmar</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        window.addEventListener('load', async () => {
+            // Modern dapp browsers...
+            if (window.ethereum) {
+                window.web3 = new Web3(ethereum);
+                try {
+                    // Request account access if needed
+                    await ethereum.enable();
+                    // Acccounts now exposed
+                    web3.eth.sendTransaction({/* ... */});
+                } catch (error) {
+                    // User denied account access...
+                }
+            }
+            // Legacy dapp browsers...
+            else if (window.web3) {
+                window.web3 = new Web3(web3.currentProvider);
+                // Acccounts always exposed
+                web3.eth.sendTransaction({/* ... */});
+            }
+            // Non-dapp browsers...
+            else {
+                alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+
+            if(window.web3){
+                $('#cuenta').html(web3.eth.defaultAccount);
+
+                window.ethereum.on('accountsChanged', function (accounts) {
+                    updateUI();
+                })
+
+                window.ethereum.on('networkChanged', function (netId) {
+                // Time to reload your interface with netId
+                })
+
+                updateUI();
+            }
+
+        });
+
+        function updateUI(){
+            $('#cuenta').html(web3.eth.accounts[0]);
+            web3.eth.defaultAccount = web3.eth.accounts[0];
+        }
+      
+      $("#btnRegistrar").click(function() {
+        
+        var abi = [{"constant":false,"inputs":[{"name":"_matricula","type":"uint256"},{"name":"_nombreCompleto","type":"string"},{"name":"_campus","type":"string"},{"name":"_grupo","type":"string"},{"name":"_ttpTokenAddress","type":"address"}],"name":"registrarAlumno","outputs":[{"name":"ok","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"getCurso","outputs":[{"name":"thecurso","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getTransactions","outputs":[{"name":"mRegistrosLs","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getProfesor","outputs":[{"name":"theprofesor","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"}],"name":"getPuntos","outputs":[{"name":"puntos","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_ttpTokenAddress","type":"address"},{"name":"_puntos","type":"int256"},{"name":"opcion","type":"uint256"},{"name":"_mensaje","type":"bytes32"}],"name":"modificaPuntos","outputs":[{"name":"saldo","type":"int256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_curso","type":"uint256"}],"name":"modificaCurso","outputs":[{"name":"ok","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_profesor","type":"address"},{"name":"_curso","type":"uint256"},{"name":"_ttptadd","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
+        var mycontract = web3.eth.contract(abi);
+        var mygp = mycontract.at('0x95d27033d1ef90a6ce85b7a44c8952f2f466233e');
+        mygp.getPuntos('0x678c259754a1454867c068855D649781CCe87e25',function(err,result){
+            console.log('calling GestionPuntos' + JSON.stringify(result));
+        });
+        
+        var abit = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_subtractedValue","type":"uint256"}],"name":"decreaseApproval","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_addedValue","type":"uint256"}],"name":"increaseApproval","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":true,"name":"data","type":"bytes"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}];
+        var myctk = web3.eth.contract(abit)
+        var mytt = myctk.at('0x40dEEB3d592d6f41547a4A4B833ea40e8210F3F7');
+        mytt.balanceOf('0x678c259754a1454867c068855D649781CCe87e25',function(err,result){
+            console.log('calling TTPToken' +JSON.stringify(result));
+        });
+        mytt.approve('0x95d27033d1ef90a6ce85b7a44c8952f2f466233e',100000,function(err,result){
+            console.log('Aproving contract to handle tokens' + JSON.stringify(result));
+        });
+
+
+        //   var _matricula = $("#matricula").val();
+        //   var _puntos = $("#puntos").val();
+
+        //   const URL = 'http://localhost:3000/api/cursos/modificaPuntos';
+
+        //   const _data = {
+        //     matricula:_matricula,
+        //     puntos:_puntos};
+
+        //   $.ajax({
+        //       url: URL,
+        //       type: "POST",
+        //       data: JSON.stringify(_data),
+        //       contentType: "application/json; charset=utf-8",
+        //       dataType: "json",
+        //   }).then(function(result) {
+        //     $("#Alumno").html(
+        //       'Registro de puntos: ' + result[0].result +
+        //       ' Hash Transacción: ' + result[0].tx_hash);
+        //   });
+
+        // gestionpuntos.registrarAlumno(matricula,nombre,campus,grupo,
+        //   function(err, res){
+        //     if(err){
+        //       console.log(err);
+        //     }
+        //     else{
+        //       console.log(err);
+        //     }
+        //   }
+        // );
+
+        // var curso = gestionpuntos.getCurso({},function(err,result){
+        //   $("#Alumno").html('curso: ' + result);
+        // });
+
+      });
+
+    </script>
+
+</body>
+</html>
